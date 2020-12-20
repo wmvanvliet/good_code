@@ -146,4 +146,9 @@ def solve_part1(puzzle_input):
             return entry1 * entry2
 ```
 
+Comments were added to explain anything that may be non-obvious in the code.
+
+In many scenarios, the names `entry1` and `entry2` would be bad variable names, because there would be a more semantic description of the role of these two entries and their relationship to one another.
+However, in the abstract world of this puzzle, there isn't anything more to these entries other than that there are two of them, so in this case `entry1` and `entry2` are the perfect names and anything else would be more confusing.
+Again, context is everything.
 
