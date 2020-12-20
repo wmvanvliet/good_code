@@ -78,7 +78,7 @@ The unit test can be run through the terminal command: `py.test day01.py` and cu
 To satisfy requirement #2, that it must be obvious to a human reading the code to decipher what it does, names are **extremely** important.
 On a theoretical level, all is numbers.
 It is in the names we assign to these numbers that meaning can be derived from them.
-In many context, my chosen names `solve_part1` and `test_part1` would be quite uninformative.
+In many contexts, my chosen names `solve_part1` and `test_part1` would be quite uninformative.
 Part 1 of what?
 Now we see how important the context of a program is to requirement #2.
 In the context of Advent of Code puzzles, it is more obvious to call the function `solve_part1` than it would be to name it something like `balance_expenses`.
@@ -112,7 +112,7 @@ One optimization would be to not try both the `entry1, entry2` and `entry2, entr
 But following that line of thought, it occured to me that we can do even better.
 For a given `entry1` we can directly compute the matching `entry2` through `2020 - entry1`.
 We just need to check whether the thus computed `entry2` is part of the expense report.
-Since the order of the entries in the expense report is irrelevant to the puzzle, so we may opt to store it in a `set()` to have very quick lookups.
+Since the order of the entries in the expense report is irrelevant to the puzzle, we can store it in a `set()` to have very quick lookups.
 The following implementation has a time complexity of O(n):
 
 ```python
