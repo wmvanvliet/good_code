@@ -217,11 +217,10 @@ from itertools import combinations
 # find the solution much faster if we try the entries in ascending order.
 expense_report = sorted(int(entry) for entry in puzzle_input.lines())
 
-for entry1, entry2, entry3 in combinations(expense_report, 2):
+for entry1, entry2, entry3 in combinations(expense_report, 3):
     if entry1 + entry2 + entry3 == 2020:
         return entry1 * entry2 * entry3
 ```
 
-This finds the solution after only a few iterations, even though the worst case complexity is still O(n³).
+This finds the solution after only 227 iterations, even though the worst case complexity is still O(n³).
 But we don't care about worst case complexity, we have a specific puzzle input and it must be fast for that specific case, which it is.
-
