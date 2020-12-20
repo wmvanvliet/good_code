@@ -224,3 +224,17 @@ for entry1, entry2, entry3 in combinations(expense_report, 3):
 
 This finds the solution after only 227 iterations, even though the worst case complexity is still O(n³).
 But we don't care about worst case complexity, we have a specific puzzle input and it must be fast for that specific case, which it is.
+
+Finally, we need to run the algorithms on the real puzzle input:
+
+```python
+# When the script is run as `python day01.py`, solve the puzzle using the real
+# puzzle input.
+if __name__ == '__main__':
+    with open('day1_input.txt') as f:
+        puzzle_input = f.read()
+        print('Part 1:', solve_part1(puzzle_input))
+        print('Part 2:', solve_part2(puzzle_input))
+```
+
+You can find the code in its final form here: [day01.py](day01.py).
