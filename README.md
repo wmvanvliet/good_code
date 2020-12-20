@@ -90,7 +90,7 @@ The testing framework requires all our unit tests to start with the verb `test_`
 
 On to the implementation of the `solve_part1` function.
 First, we must parse the input, which comes to us as a string, to a list of numbers.
-We should always use the names given in the context of the problem.
+Of course, we should not think in terms of "the string" and "the list of numbers", but always use appropriate names given the context of the problem.
 In the puzzle description, the string is called the "puzzle input", each number an "entry" and the list of numbers an "expense report".
 My attempt to translate the above into Python in the most obvious way possible is this:
 ```python
