@@ -22,7 +22,7 @@ I'll be discussing the code I wrote to solve two puzzles and describe some of my
 
 # Advent of code 2020, day 1
 
-The Elves in accounting need is to fix a expense report (our puzzle input); apparently, something isn't quite adding up.
+The Elves in accounting need to fix a expense report (our puzzle input); apparently, something isn't quite adding up.
 Specifically, given a list of numbers (the expense report), they need us to find the two entries that sum to 2020.
 The solution to the puzzle is those two numbers multiplied together.
 I invite you to [read the puzzle description for yourself](https://adventofcode.com/2020/day/1).
