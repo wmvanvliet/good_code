@@ -213,7 +213,7 @@ What happens if we try the small entries first?
 ```python
 from itertools import combinations
 
-# For the expenses to sum to 2020, they must be relatively small. We will
+# For three entries to sum to 2020, they must be relatively small. We will
 # find the solution much faster if we try the entries in ascending order.
 expense_report = sorted(int(entry) for entry in puzzle_input.lines())
 
