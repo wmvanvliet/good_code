@@ -18,11 +18,11 @@ We will see that fullfilling the second requirement depends a great deal on the 
 The context I chose is that of a laboratory that produces groundbreaking results from measurements obtained through experiments.
 The reason for this choice is that this is the context in which I usually write code and hence have thought enough about that I may have something worthwhile to say.
 
-I'll be discussing the code I wrote to solve two puzzles and describe some of my design decisions and the reasoning behind those decisions in light of the three requirements listed above.
+I'll be discussing the code I wrote to solve the first puzzle and describe some of my design decisions and the reasoning behind those decisions in light of the three requirements listed above.
 
 # Advent of code 2020, day 1
 
-The Elves in accounting need is to fix a expense report (our puzzle input); apparently, something isn't quite adding up.
+The Elves in accounting need to fix a expense report (our puzzle input); apparently, something isn't quite adding up.
 Specifically, given a list of numbers (the expense report), they need us to find the two entries that sum to 2020.
 The solution to the puzzle is those two numbers multiplied together.
 I invite you to [read the puzzle description for yourself](https://adventofcode.com/2020/day/1).
@@ -76,9 +76,9 @@ Each function has its own docstring explaining its purpose.
 The unit test can be run through the terminal command: `py.test day01.py` and currently fails because there is no code yet to actually solve the puzzle.
 
 To satisfy requirement #2, that it must be obvious to a human reading the code to decipher what it does, names are **extremely** important.
-On a theoretical level, all is numbers.
-It is in the names we assign to these numbers that meaning can be derived from them.
-In many context, my chosen names `solve_part1` and `test_part1` would be quite uninformative.
+On a theoretical level, it's numbers all the way down.
+It is through the names we assign to these numbers that meaning can be derived from them.
+In many contexts, my chosen names `solve_part1` and `test_part1` would be quite uninformative.
 Part 1 of what?
 Now we see how important the context of a program is to requirement #2.
 In the context of Advent of Code puzzles, it is more obvious to call the function `solve_part1` than it would be to name it something like `balance_expenses`.
@@ -112,8 +112,8 @@ One optimization would be to not try both the `entry1, entry2` and `entry2, entr
 But following that line of thought, it occured to me that we can do even better.
 For a given `entry1` we can directly compute the matching `entry2` through `2020 - entry1`.
 We just need to check whether the thus computed `entry2` is part of the expense report.
-Since the order of the entries in the expense report is irrelevant to the puzzle, so we may opt to store it in a `set()` to have very quick lookups.
-The following implementation has a time complexity of O(n):
+Since the order of the entries in the expense report is irrelevant to the puzzle, we can store it in a `set()` to have very quick lookups.
+The following implementation has a time complexity of around O(n) (it depends on how many hash collisions the `set()` will experience, but it will be pretty fast):
 
 ```python
 def solve_part1(puzzle_input):
@@ -141,7 +141,7 @@ However, in the abstract world of this puzzle, there isn't anything more to thes
 Again, context is everything.
 
 What about the number `2020`?
-In many cases, its better to assign this value to a variable with a descriptive name, because we are more interested in what the number represents (the speed of light, the speed limit) than the actual number.
+In many cases, its better to assign this value to a variable with a descriptive name, because we are more interested in what the number represents (the speed of light, the number of gigawatts required to power a time machine) than the actual number.
 But in this context, the puzzle gives no meaning to the number 2020, in which case, its probably best not to try and invent one and just use the number itself.
 
 How about generalizing the solution to allow us to search for entries that sum for a number other than 2020?
@@ -159,7 +159,6 @@ One way to solve this is to make our solution to part 1 generic and re-use it in
 But in practise, this adds quite some complexity (try it yourself and discover the amount of stuff you suddenly have to deal with).
 For example, we have to move the parsing of the puzzle input outside the `solve_part1` function.
 And we must deal with the case where these is no solution to part1.
-And we must return the actual entries from the `solve_part1` function.
 Not worth it.
 
 Instead, let's focus first on a solution to part 2 in isolation.
@@ -183,7 +182,7 @@ As a bonus, we now no longer test multiple permutations of the same three entrie
 from itertools import combinations
 
 expense_report = [int(entry) for entry in puzzle_input.lines()]
-for entry1, entry2, entry3 in combinations(expense_report, 2):
+for entry1, entry2, entry3 in combinations(expense_report, 3):
     if entry1 + entry2 + entry3 == 2020:
         return entry1 * entry2 * entry3
 ```
@@ -202,7 +201,7 @@ for entry1, entry2 in combinations(expense_report, 2):
         return entry1 * entry2 * entry3
 ```
 
-Now we're at O(n²), but it has come at the cost of readability.
+Now we're at around O(n²) (again, it depends on the amount of hash collisions in the `set()`), but it has come at the cost of readability.
 We generate combinations of two entries while the puzzle asks us to consider combinations of three.
 The code is no longer immediately obvious.
 
@@ -233,8 +232,8 @@ Finally, we need to run the algorithms on the real puzzle input:
 if __name__ == '__main__':
     with open('day1_input.txt') as f:
         puzzle_input = f.read()
-        print('Part 1:', solve_part1(puzzle_input))
-        print('Part 2:', solve_part2(puzzle_input))
+    print('Part 1:', solve_part1(puzzle_input))
+    print('Part 2:', solve_part2(puzzle_input))
 ```
 
 You can find the code in its final form here: [`day01.py`](day01.py).
