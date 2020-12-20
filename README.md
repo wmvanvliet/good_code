@@ -159,7 +159,6 @@ One way to solve this is to make our solution to part 1 generic and re-use it in
 But in practise, this adds quite some complexity (try it yourself and discover the amount of stuff you suddenly have to deal with).
 For example, we have to move the parsing of the puzzle input outside the `solve_part1` function.
 And we must deal with the case where these is no solution to part1.
-And we must return the actual entries from the `solve_part1` function.
 Not worth it.
 
 Instead, let's focus first on a solution to part 2 in isolation.
