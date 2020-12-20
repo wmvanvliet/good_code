@@ -182,7 +182,7 @@ As a bonus, we now no longer test multiple permutations of the same three entrie
 from itertools import combinations
 
 expense_report = [int(entry) for entry in puzzle_input.lines()]
-for entry1, entry2, entry3 in combinations(expense_report, 2):
+for entry1, entry2, entry3 in combinations(expense_report, 3):
     if entry1 + entry2 + entry3 == 2020:
         return entry1 * entry2 * entry3
 ```
