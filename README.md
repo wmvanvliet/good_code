@@ -232,8 +232,8 @@ Finally, we need to run the algorithms on the real puzzle input:
 if __name__ == '__main__':
     with open('day1_input.txt') as f:
         puzzle_input = f.read()
-        print('Part 1:', solve_part1(puzzle_input))
-        print('Part 2:', solve_part2(puzzle_input))
+    print('Part 1:', solve_part1(puzzle_input))
+    print('Part 2:', solve_part2(puzzle_input))
 ```
 
 You can find the code in its final form here: [`day01.py`](day01.py).
