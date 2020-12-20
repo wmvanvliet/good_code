@@ -101,9 +101,24 @@ One way to find the two entries that sum to 2020 is to keep trying combinations 
 
 ```python
 from itertools import combinations
-for entry1, entry in combinations(expense_report, 2):
-    if entry1 + entry2 == 2020:
-        return entry1 * entry2
+
+def solve_part1(puzzle_input):
+    """Solve part 1 of today's puzzle.
+
+    Find the two entries that sum to 2020; what do you get if you multiply them
+    together?
+    """
+
+    # We need quick lookups, so we store the expense report as a set.
+    expense_report = set(int(entry) for entry in puzzle_input.split())
+
+    for entry1 in expense_report:
+        # This is the entry that needs to be in the expense report if the two
+        # are to sum to 2020.
+        entry2 = 2020 - entry1
+        if entry2 in expense_report:
+            return entry1 * entry2
+
 ```
 
 However, that has a time complexity of O(n²).
@@ -113,10 +128,14 @@ Furthermore, the order of the entries in the expense report is irrelevant to the
 The following implementation has a time complexity of O(n):
 
 ```python
-expense_report = set(int(entry) for entry in puzzle_input.lines())
-for entry1 combinations(expense_report):
-    entry2 = 2020 - entry1
-    if entry2 in expense_report:
-        return entry1 * entry2
+from itertools import combinations
+
+def solve_part1(puzzle_input):
+  expense_report = set(int(entry) for entry in puzzle_input.lines())
+  for entry1 combinations(expense_report):
+      entry2 = 2020 - entry1
+      if entry2 in expense_report:
+          return entry1 * entry2
 ```
+
 
