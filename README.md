@@ -76,8 +76,8 @@ Each function has its own docstring explaining its purpose.
 The unit test can be run through the terminal command: `py.test day01.py` and currently fails because there is no code yet to actually solve the puzzle.
 
 To satisfy requirement #2, that it must be obvious to a human reading the code to decipher what it does, names are **extremely** important.
-On a theoretical level, all is numbers.
-It is in the names we assign to these numbers that meaning can be derived from them.
+On a theoretical level, it's numbers all the way down.
+It is through the names we assign to these numbers that meaning can be derived from them.
 In many contexts, my chosen names `solve_part1` and `test_part1` would be quite uninformative.
 Part 1 of what?
 Now we see how important the context of a program is to requirement #2.
