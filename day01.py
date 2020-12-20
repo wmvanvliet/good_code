@@ -78,5 +78,5 @@ def test_part2():
 if __name__ == '__main__':
     with open('day1_input.txt') as f:
         puzzle_input = f.read()
-        print('Part 1:', solve_part1(puzzle_input))
-        print('Part 2:', solve_part2(puzzle_input))
+    print('Part 1:', solve_part1(puzzle_input))
+    print('Part 2:', solve_part2(puzzle_input))
