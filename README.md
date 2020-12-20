@@ -18,7 +18,7 @@ We will see that fullfilling the second requirement depends a great deal on the 
 The context I chose is that of a laboratory that produces groundbreaking results from measurements obtained through experiments.
 The reason for this choice is that this is the context in which I usually write code and hence have thought enough about that I may have something worthwhile to say.
 
-I'll be discussing the code I wrote to solve two puzzles and describe some of my design decisions and the reasoning behind those decisions in light of the three requirements listed above.
+I'll be discussing the code I wrote to solve the first puzzle and describe some of my design decisions and the reasoning behind those decisions in light of the three requirements listed above.
 
 # Advent of code 2020, day 1
 
