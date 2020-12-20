@@ -113,7 +113,7 @@ But following that line of thought, it occured to me that we can do even better.
 For a given `entry1` we can directly compute the matching `entry2` through `2020 - entry1`.
 We just need to check whether the thus computed `entry2` is part of the expense report.
 Since the order of the entries in the expense report is irrelevant to the puzzle, we can store it in a `set()` to have very quick lookups.
-The following implementation has a time complexity of O(n):
+The following implementation has a time complexity of around O(n) (it depends on how many hash collisions the `set()` will experience, but it will be pretty fast):
 
 ```python
 def solve_part1(puzzle_input):
@@ -202,7 +202,7 @@ for entry1, entry2 in combinations(expense_report, 2):
         return entry1 * entry2 * entry3
 ```
 
-Now we're at O(n²), but it has come at the cost of readability.
+Now we're at around O(n²) (again, it depends on the amount of hash collisions in the `set()`), but it has come at the cost of readability.
 We generate combinations of two entries while the puzzle asks us to consider combinations of three.
 The code is no longer immediately obvious.
 
