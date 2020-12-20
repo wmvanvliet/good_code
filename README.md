@@ -237,4 +237,4 @@ if __name__ == '__main__':
         print('Part 2:', solve_part2(puzzle_input))
 ```
 
-You can find the code in its final form here: [day01.py](day01.py).
+You can find the code in its final form here: [`day01.py`](day01.py).
