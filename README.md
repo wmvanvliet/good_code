@@ -137,6 +137,91 @@ def solve_part1(puzzle_input):
 Comments were added to explain anything that may be non-obvious in the code.
 
 In many scenarios, the names `entry1` and `entry2` would be bad variable names, because there would be a more semantic description of the role of these two entries and their relationship to one another.
-However, in the abstract world of this puzzle, there isn't anything more to these entries other than that there are two of them, so in this case `entry1` and `entry2` are the perfect names and anything else would be more confusing.
+However, in the abstract world of this puzzle, there isn't anything more to these entries other than that there are two of them, so in this case, anything else would be more confusing than `entry1` and `entry2`.
 Again, context is everything.
+
+What about the number `2020`?
+In many cases, its better to assign this value to a variable with a descriptive name, because we are more interested in what the number represents (the speed of light, the speed limit) than the actual number.
+But in this context, the puzzle gives no meaning to the number 2020, in which case, its probably best not to try and invent one and just use the number itself.
+
+How about generalizing the solution to allow us to search for entries that sum for a number other than 2020?
+Or to search for more than two entries?
+You might have heart of "premature optimization is the root of all evil" and in my opinion, something similar applies to premature generalization.
+Especially in the context of data analysis, there are plenty of cases where we are only interested in one specific computation, performed on one specific dataset, and generalizing it would only make the code more complex.
+The trick is to recognize when code should be generic, and when it should not be.
+The same goes for checking edge cases: when code needs to be generic, you don't know what the input may be in the future, so you must take care of any and all edge cases.
+On the other hand, if you do know the input and know it's not going to change, there is a case to be made for avoiding code that deals with edge cases if it would add too much complexity.
+In the case of this Advent of Code puzzle, there is no need to be generic, nor deal with edge cases, so we won't.
+All we care about is the shortest, most obvious code possible.
+
+Part two of the puzzle asks us to find **three** entries that sum to 2020.
+One way to solve this is to make our solution to part 1 generic and re-use it in part 2.
+But in practise, this adds quite some complexity (try it yourself and discover the amount of stuff you suddenly have to deal with).
+For example, we have to move the parsing of the puzzle input outside the `solve_part1` function.
+And we must deal with the case where these is no solution to part1.
+And we must return the actual entries from the `solve_part1` function.
+Not worth it.
+
+Instead, let's focus first on a solution to part 2 in isolation.
+First the most straightforward solution:
+
+```python
+expense_report = [int(entry) for entry in puzzle_input.lines()]
+for entry1 in expense_report:
+    for entry2 in expense_report:
+        for entry3 in expense_report:
+            if entry1 + entry2 + entry3 == 2020:
+                return entry1 * entry2 * entry3
+```
+
+Triple nested loops, that's getting difficult to read by a human.
+Can we do better?
+Yes, if we use the `itertools` module that is part of the standard library.
+As a bonus, we now no longer test multiple permutations of the same three entries:
+
+```python
+from itertools import combinations
+
+expense_report = [int(entry) for entry in puzzle_input.lines()]
+for entry1, entry2, entry3 in combinations(expense_report, 2):
+    if entry1 + entry2 + entry3 == 2020:
+        return entry1 * entry2 * entry3
+```
+
+That's pretty nice to read.
+However, the time complexity is O(n³), how about trying to satisfy requirement #3 without adding too much complexity?
+We could implement our `2020 - x` and `set()` lookup trick, which looks like this:
+
+```python
+from itertools import combinations
+
+expense_report = set(int(entry) for entry in puzzle_input.lines())
+for entry1, entry2 in combinations(expense_report, 2):
+    entry3 = 2020 - (entry1 + entry2)
+    if entry3 in expense_report:
+        return entry1 * entry2 * entry3
+```
+
+Now we're at O(n²), but it has come at the cost of readability.
+We generate combinations of two entries while the puzzle asks us to consider combinations of three.
+The code is no longer immediately obvious.
+
+For our final version, let's consider another optimization strategy.
+If three numbers need to sum to 2020, they must be relatively small.
+What happens if we try the small entries first?
+
+```python
+from itertools import combinations
+
+# For the expenses to sum to 2020, they must be relatively small. We will
+# find the solution much faster if we try the entries in ascending order.
+expense_report = sorted(int(entry) for entry in puzzle_input.lines())
+
+for entry1, entry2, entry3 in combinations(expense_report, 2):
+    if entry1 + entry2 + entry3 == 2020:
+        return entry1 * entry2 * entry3
+```
+
+This finds the solution after only a few iterations, even though the worst case complexity is still O(n³).
+But we don't care about worst case complexity, we have a specific puzzle input and it must be fast for that specific case, which it is.
 
