@@ -141,7 +141,7 @@ However, in the abstract world of this puzzle, there isn't anything more to thes
 Again, context is everything.
 
 What about the number `2020`?
-In many cases, its better to assign this value to a variable with a descriptive name, because we are more interested in what the number represents (the speed of light, the numbeb of gigawatts required to power a time machine) than the actual number.
+In many cases, its better to assign this value to a variable with a descriptive name, because we are more interested in what the number represents (the speed of light, the number of gigawatts required to power a time machine) than the actual number.
 But in this context, the puzzle gives no meaning to the number 2020, in which case, its probably best not to try and invent one and just use the number itself.
 
 How about generalizing the solution to allow us to search for entries that sum for a number other than 2020?
