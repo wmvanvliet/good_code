@@ -100,31 +100,19 @@ expense_report = [int(entry) for entry in puzzle_input.lines()]
 One way to find the two entries that sum to 2020 is to keep trying combinations until we find the correct one:
 
 ```python
-from itertools import combinations
-
-def solve_part1(puzzle_input):
-    """Solve part 1 of today's puzzle.
-
-    Find the two entries that sum to 2020; what do you get if you multiply them
-    together?
-    """
-
-    # We need quick lookups, so we store the expense report as a set.
-    expense_report = set(int(entry) for entry in puzzle_input.split())
-
-    for entry1 in expense_report:
-        # This is the entry that needs to be in the expense report if the two
-        # are to sum to 2020.
-        entry2 = 2020 - entry1
-        if entry2 in expense_report:
+for entry1 in expense_report:
+    for entry2 in expense_report:
+        if entry1 + entry2 == 2020:
             return entry1 * entry2
-
 ```
 
 However, that has a time complexity of O(n²).
 Requirement #3 asks us to think if we can find a better way.
-One thing that comes to mind is that when know `entry1`, we can quickly compute which `entry2` we are looking for, namely `2020 - entry1`.
-Furthermore, the order of the entries in the expense report is irrelevant to the puzzle, so we may opt to store it in a set to have very quick lookups.
+One optimization would be to not try both the `entry1, entry2` and `entry2, entry1` combinations, as they have the same sum.
+But following that line of thought, it occured to me that we can do even better.
+For a given `entry1` we can directly compute the matching `entry2` through `2020 - entry1`.
+We just need to check whether the thus computed `entry2` is part of the expense report.
+Since the order of the entries in the expense report is irrelevant to the puzzle, so we may opt to store it in a `set()` to have very quick lookups.
 The following implementation has a time complexity of O(n):
 
 ```python
