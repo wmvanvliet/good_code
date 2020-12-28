@@ -211,7 +211,7 @@ def decypher_ticket(puzzle_input):
     potential_fields_names = dict()
     for field_num, observed_values in enumerate(observed_fields_values):
         potential_names = set(name for name, (range1, range2) in rules.items()
-                              if all((v in range1 or v in range2)
+                              if all(v in range1 or v in range2
                                      for v in observed_values))
         potential_fields_names[field_num] = potential_names
 
