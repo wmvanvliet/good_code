@@ -142,7 +142,7 @@ def parse_puzzle_input(puzzle_input):
 
 
 def find_invalid_numbers(ticket, rules):
-    """Find all numbers in a ticket that are not part of any valid range."""
+    """Find all numbers in a ticket that do not satify any of the rules."""
     invalid_numbers = list()
     for num in ticket:
         # Concatenate all valid ranges into one big iterator
