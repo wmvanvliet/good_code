@@ -13,6 +13,29 @@ def solve_part1(puzzle_input):
 
     Find the two entries that sum to 2020; what do you get if you multiply them
     together?
+
+    Parameters
+    ----------
+    puzzle_input : str
+        The puzzle input provided by the Advent of Code website.
+
+    Returns
+    -------
+    part1_answer : int
+        The answer to part 1 of the puzzle
+
+    Examples
+    --------
+    In this list, the two entries that sum to 2020 are 1721 and 299.
+    Multiplying them together produces 1721 * 299 = 514579, so the correct
+    answer is 514579.
+    >>> solve_part1('''1721
+    ...                979
+    ...                366
+    ...                299
+    ...                675
+    ...                1456''')
+    514579
     """
 
     # We need quick lookups, so we store the expense report as a set.
@@ -31,6 +54,28 @@ def solve_part2(puzzle_input):
 
     In your expense report, what is the product of the three entries that sum
     to 2020?
+
+    Parameters
+    ----------
+    puzzle_input : str
+        The puzzle input provided by the Advent of Code website.
+
+    Returns
+    -------
+    part2_answer : int
+        The answer to part 2 of the puzzle
+
+    Examples
+    --------
+    Using the above example again, the three entries that sum to 2020 are 979,
+    366, and 675. Multiplying them together produces the answer, 241861950.
+    >>> solve_part2('''1721
+    ...                979
+    ...                366
+    ...                299
+    ...                675
+    ...                1456''')
+    241861950
     """
 
     # For three entries to sum to 2020, they must be relatively small. We will
@@ -41,36 +86,7 @@ def solve_part2(puzzle_input):
     for entry1, entry2, entry3 in combinations(expense_report, 3):
         n_iter += 1
         if entry1 + entry2 + entry3 == 2020:
-            print(n_iter)
             return entry1 * entry2 * entry3
-
-
-def test_part1():
-    """Run the test cases for part1 given in the puzzle description."""
-
-    # In this list, the two entries that sum to 2020 are 1721 and 299.
-    # Multiplying them together produces 1721 * 299 = 514579, so the correct
-    # answer is 514579.
-    assert solve_part1('''1721
-                          979
-                          366
-                          299
-                          675
-                          1456''') == 514579
-
-
-def test_part2():
-    """Run the test cases for part2 given in the puzzle description."""
-
-    # Using the above example again, the three entries that sum to 2020 are
-    # 979, 366, and 675. Multiplying them together produces the answer,
-    # 241861950.
-    assert solve_part2('''1721
-                          979
-                          366
-                          299
-                          675
-                          1456''') == 241861950
 
 
 # When the script is run as `python day01.py`, solve the puzzle using the real

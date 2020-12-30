@@ -40,7 +40,6 @@ the same specific field, the second number is always a different specific
 field, and so on - you just don't know what each position actually means!
 """
 import re
-import itertools
 
 
 def solve_part1(puzzle_input):
@@ -50,38 +49,55 @@ def solve_part1(puzzle_input):
     tickets that contain values which aren't valid for any field. Ignore your
     ticket for now.
 
-    For example, suppose you have the following notes:
+    Consider the validity of the nearby tickets you scanned. What is your
+    ticket scanning error rate?
 
-    +----------------------+
-    | class: 1-3 or 5-7    |
-    | row: 6-11 or 33-44   |
-    | seat: 13-40 or 45-50 |
-    |                      |
-    | your ticket:         |
-    | 7,1,14               |
-    |                      |
-    | nearby tickets:      |
-    | 7,3,47               |
-    | 40,4,50              |
-    | 55,2,20              |
-    | 38,6,12              |
-    +----------------------+
+    Examples
+    --------
+    Suppose you have the following notes:
+
+    >>> puzzle_input = '''class: 1-3 or 5-7
+    ...                row: 6-11 or 33-44
+    ...                seat: 13-40 or 45-50
+    ...
+    ...                your ticket:
+    ...                7,1,14
+    ...
+    ...                nearby tickets:
+    ...                7,3,47
+    ...                40,4,50
+    ...                55,2,20
+    ...                38,6,12'''
 
     It doesn't matter which position corresponds to which field; you can
     identify invalid nearby tickets by considering only whether tickets contain
     values that are not valid for any field. Adding together all of the invalid
     values produces your ticket scanning error rate: 4 + 55 + 12 = 71.
 
-    Consider the validity of the nearby tickets you scanned. What is your
-    ticket scanning error rate?
+    >>> solve_part1(puzzle_input)
+    71
+
+    Parameters
+    ----------
+    puzzle_input : str
+        The puzzle input provided by the Advent of Code website.
+
+    Returns
+    -------
+    error_rate : int
+        The answer to part 1 of the puzzle.
     """
     # We ignore our ticket for now
     rules, _, nearby_tickets = parse_puzzle_input(puzzle_input)
 
     # Compute total error rate for all tickets
-    invalid_numbers = (find_invalid_numbers(ticket, rules)
-                       for ticket in nearby_tickets)
-    return sum(itertools.chain(*invalid_numbers))
+    error_rate = 0
+    for ticket in nearby_tickets:
+        # Find all numbers in a ticket that do not satify any of the rules.
+        invalid_values = (value for value in ticket
+                          if not any(rule.is_valid(value) for rule in rules))
+        error_rate += sum(invalid_values)
+    return error_rate
 
 
 def solve_part2(puzzle_input):
@@ -90,37 +106,93 @@ def solve_part2(puzzle_input):
     Once you work out which field is which, look for the six fields on your
     ticket that start with the word departure. What do you get if you multiply
     those six values together?
+
+    Parameters
+    ----------
+    puzzle_input : str
+        The puzzle input provided by the Advent of Code website.
+
+    Returns
+    -------
+    product_of_departure_fields : int
+        The answer to part 2 of the puzzle.
     """
     decyphered_ticket = decypher_ticket(puzzle_input)
 
     # Look for the six fields on your ticket that start with the word
     # departure. What do you get if you multiply those six values together?
-    answer = 1
+    product_of_departure_fields = 1
     for field_name, field_value in decyphered_ticket.items():
         if field_name.startswith('departure'):
-            answer *= field_value
-    return answer
+            product_of_departure_fields *= field_value
+    return product_of_departure_fields
 
 
-def parse_puzzle_input(puzzle_input):
-    """Parse the puzzle input into convenient Python data structures."""
-    rules_str, your_ticket_str, nearby_tickets_str = puzzle_input.split('\n\n')
-
-    # Regular expression matching substrings such as:
+class Rule:
+    """
+    Parameters
+    ----------
+    rule_str : str
+        The string representation of the rule as given in the puzzle input.
+    """
+    # Regular expression used to parse the string representation of a rule.
+    # It matches substrings such as:
     #     class: 1-3 or 5-7
     #     row: 6-11 or 33-44
     #     seat: 13-40 or 45-50
     #     departure time: 46-147 or 153-958
-    rule_matcher = re.compile(r'\s*([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)\s*')
+    pattern = re.compile(r'\s*([\w ]+): (\d+)-(\d+) or (\d+)-(\d+)\s*')
 
-    # Apply the regular expression to parse the rules into a dict.
-    rules = dict()
-    for match in rule_matcher.finditer(rules_str):
-        field_name, from1, to1, from2, to2 = match.groups()
+    @staticmethod
+    def __init__(self, rule_str):
+        match = Rule.pattern.search(rule_str)
+        self.name, from1, to1, from2, to2 = match.groups()
+
         # Ranges in the puzzle input are end-inclusive.
         # Python ranges are end-exclusive, so we need to add one.
-        rules[field_name] = (range(int(from1), int(to1) + 1),
-                             range(int(from2), int(to2) + 1))
+        self.valid_range1 = range(int(from1), int(to1) + 1)
+        self.valid_range2 = range(int(from2), int(to2) + 1)
+
+    def is_valid(self, value):
+        """Checks whether a value adheres to this rule.
+
+        For a value to be valid, it needs to be part of either of the
+        valid value ranges of this rule.
+
+        Parameters
+        ----------
+        value : int
+            The value to check against this rule.
+
+        Returns
+        -------
+        is_valid : bool
+            Whether the given value is valid according to this rule.
+        """
+        return value in self.valid_range1 or value in self.valid_range2
+
+
+def parse_puzzle_input(puzzle_input):
+    """Parse the puzzle input into convenient Python data structures.
+
+    Parameters
+    ----------
+    puzzle_input : str
+        The puzzle input provided by the Advent of Code website.
+
+    Returns
+    -------
+    rules : list of Rule
+        The rules given at the top of the puzzle input.
+    your_ticket : list of int
+        The values written on your ticket.
+    nearby_ticket : list of list of int
+        For each nearby ticket, the values written on that ticket.
+    """
+    rules_str, your_ticket_str, nearby_tickets_str = puzzle_input.split('\n\n')
+
+    # Parse all the rules
+    rules = [Rule(line) for line in rules_str.split('\n')]
 
     # Parse lines such as:
     #     your ticket:
@@ -141,24 +213,6 @@ def parse_puzzle_input(puzzle_input):
     return(rules, your_ticket, nearby_tickets)
 
 
-def find_invalid_numbers(ticket, rules):
-    """Find all numbers in a ticket that do not satify any of the rules."""
-    invalid_numbers = list()
-    for num in ticket:
-        # Concatenate all valid ranges into one big iterator
-        range_iter = itertools.chain(*rules.values())
-
-        # Check whether the number is in any of the ranges.
-        for rule in range_iter:
-            if num in rule:
-                break  # Valid number
-        else:
-            # The number was not part of any range.
-            invalid_numbers.append(num)
-
-    return invalid_numbers
-
-
 def decypher_ticket(puzzle_input):
     """Convert the puzzle input into a decyphered train ticket.
 
@@ -171,32 +225,37 @@ def decypher_ticket(puzzle_input):
     is the third field, it is the third field on every ticket, including your
     ticket.
 
-    For example, suppose you have the following notes:
+    Examples
+    --------
+    Suppose you have the following notes:
 
-    +----------------------+
-    | class: 0-1 or 4-19   |
-    | row: 0-5 or 8-19     |
-    | seat: 0-13 or 16-19  |
-    |                      |
-    | your ticket:         |
-    | 11,12,13             |
-    |                      |
-    | nearby tickets:      |
-    | 3,9,18               |
-    | 15,1,5               |
-    | 5,14,9               |
-    +----------------------+
+    >>> puzzle_input = '''class: 0-1 or 4-19
+    ...                   row: 0-5 or 8-19
+    ...                   seat: 0-13 or 16-19
+    ...
+    ...                   your ticket:
+    ...                   11,12,13
+    ...
+    ...                   nearby tickets:
+    ...                   3,9,18
+    ...                   15,1,5
+    ...                   5,14,9'''
 
     Based on the nearby tickets in the above example, the first position must
     be row, the second position must be class, and the third position must be
     seat; you can conclude that in your ticket, class is 12, row is 11, and
     seat is 13.
+
+    >>> decypher_ticket(puzzle_input)
+    {'row': 11, 'class': 12, 'seat': 13}
     """
     rules, your_ticket, nearby_tickets = parse_puzzle_input(puzzle_input)
 
     # Discard all invalid tickets.
     def is_valid(ticket):
-        return len(find_invalid_numbers(ticket, rules)) == 0
+        """Are all the values in a ticket valid according to any rule?"""
+        return all(any(rule.is_valid(value) for value in ticket)
+                   for rule in rules)
     nearby_tickets = filter(is_valid, nearby_tickets)
 
     # Collect all observed values for each field.
@@ -210,17 +269,19 @@ def decypher_ticket(puzzle_input):
     # dictionary, because this datastructure will be convenient later on.
     potential_fields_names = dict()
     for field_num, observed_values in enumerate(observed_fields_values):
-        potential_names = set(name for name, (range1, range2) in rules.items()
-                              if all(v in range1 or v in range2
-                                     for v in observed_values))
+        potential_names = set(rule.name for rule in rules
+                              if all(rule.is_valid(value)
+                                     for value in observed_values))
         potential_fields_names[field_num] = potential_names
 
     # The decyphered ticket is a dictionary: field_name -> field_value
     decyphered_ticket = dict()
 
-    # Start decyphering each field. We can decypher a field when it only has
-    # one potential field name.
-    while len(potential_fields_names) > 0:
+    # Start decyphering our ticket by assigning names to each field.
+    # We can assign a name to a field whenever the field has only one potential
+    # field name.
+    unassigned_field_names = set(rule.name for rule in rules)
+    while len(unassigned_field_names) > 0:
         # Find a field with only one potential name
         for field_num, potential_names in potential_fields_names.items():
             if len(potential_names) == 1:
@@ -230,13 +291,8 @@ def decypher_ticket(puzzle_input):
         assigned_name = potential_names.pop()
         decyphered_ticket[assigned_name] = your_ticket[field_num]
 
-        # We're done with this field. By removing it from the dictionary it
-        # shrinks and eventually will be empty. Once the dictionary is empty,
-        # we know we have decyphered all the fields.
-        del potential_fields_names[field_num]
-
         # Remove the assigned field name from the list of potential
-        # names for all other fields.
+        # names for all fields.
         for other_potential_names in potential_fields_names.values():
             try:
                 other_potential_names.remove(assigned_name)
@@ -245,42 +301,10 @@ def decypher_ticket(puzzle_input):
                 # and that's ok.
                 pass
 
+        # We're done with this field.
+        unassigned_field_names.remove(assigned_name)
+
     return decyphered_ticket
-
-
-def test_part1():
-    """Run the test cases for part1 given in the puzzle description."""
-
-    assert solve_part1('''class: 1-3 or 5-7
-                          row: 6-11 or 33-44
-                          seat: 13-40 or 45-50
-
-                          your ticket:
-                          7,1,14
-
-                          nearby tickets:
-                          7,3,47
-                          40,4,50
-                          55,2,20
-                          38,6,12''') == 71
-
-
-def test_part2():
-    """Run the test cases for part2 given in the puzzle description."""
-
-    assert decypher_ticket('''class: 0-1 or 4-19
-                              row: 0-5 or 8-19
-                              seat: 0-13 or 16-19
-
-                              your ticket:
-                              11,12,13
-
-                              nearby tickets:
-                              3,9,18
-                              15,1,5
-                              5,14,9''') == {'class': 12,
-                                             'row': 11,
-                                             'seat': 13}
 
 
 # When the script is run as `python day16.py`, solve the puzzle using the real
